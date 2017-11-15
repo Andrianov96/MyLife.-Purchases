@@ -7,6 +7,8 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import org.slf4j.LoggerFactory
 import spray.json.DefaultJsonProtocol
 
+import scala.util.Random
+
 class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonProtocol with LoginPasswordJsonSupport{
   private val logger = LoggerFactory.getLogger(classOf[RequestHandler])
   val route =
@@ -33,12 +35,25 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
               //SELECT
               val Dao = new LoginPasswordDao
               val meetingPairs = Dao.findLoginPassword(json.login, json.password)
-              if (meetingPairs.length > 1)
+              if (meetingPairs.length > 1) {
                 logger.debug("more than one user has such login/password")
-              else if (meetingPairs.isEmpty)
-                complete("aa")
-              else complete(HttpResponse(entity = "src/main/resources/ShowCookie.html"))
-              complete("DEFAULT")
+                complete("")
+              }
+              else if (meetingPairs.isEmpty) {
+                logger.debug("emptyResult")
+                complete("")
+              }
+              else {
+                logger.debug("matched user" + meetingPairs.head.toString)
+                val rStr = Random.nextLong().toString
+                deleteCookie("userName") {
+                  logger.debug("cookie was deleted")
+                  setCookie(HttpCookie("userName", value = rStr)) {
+                    logger.debug("cookie was setted")
+                    complete(HttpResponse(entity = "http://localhost:8080/cookie"))
+                  }
+                }
+              }
             }
           }
         }

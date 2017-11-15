@@ -31,18 +31,18 @@ object DBsupport {
   class LoginPasswordDao extends DbConnected {
     def readAll(): List[LoginPassword] = {
       insideReadOnly { implicit session =>
-        sql"SELECT * FROM users_logins".map(rs =>
+        sql"SELECT * FROM MYTABLE".map(rs =>
           LoginPassword(rs.string("login"),
-            rs.string("pasword")
+            rs.string("password")
             )).list().apply()
       }
     }
 
     def findLoginPassword(login: String, password: String): List[LoginPassword] = {
       insideReadOnly { implicit session =>
-        sql"SELECT * FROM users_logins WHERE login = $login AND password = $password".map(rs =>
+        sql"SELECT * FROM MYTABLE WHERE login = $login AND password = $password".map(rs =>
           LoginPassword(rs.string("login"),
-            rs.string("pasword")
+            rs.string("password")
           )).list().apply()
       }
     }

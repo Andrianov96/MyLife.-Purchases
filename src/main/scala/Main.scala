@@ -33,12 +33,13 @@ object WebServer1 {
     var stmt = connectionFromPool.createStatement
     var sql = "CREATE TABLE MYTABLE " + "( login VARCHAR(255), " + " password VARCHAR(255))"
     stmt.executeUpdate(sql)
-    sql =
+    stmt.executeUpdate("INSERT INTO MYTABLE " +
+      s"VALUES ('loginv', 'passwordv')")
     //DB initiation block
 
     val myRequestHandler = new RequestHandler
     val bindingFuture = Http().bindAndHandle(myRequestHandler.route, "localhost", 8080)
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+    println(s"Server online at http://localhost.com:8080/\nPress RETURN to stop...")
     var s = scala.io.StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port
