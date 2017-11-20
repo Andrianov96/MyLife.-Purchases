@@ -17,10 +17,10 @@ $( "#myForm2" ).submit(function( event ) {
 
 $.ajax({
     type: 'post',
-    url: "http://localhost:8080/login",
+    url: "http://localhost:8080/addDefiniteItem",
     data: JSON.stringify(send),
     contentType: "application/json",
-    success: function(data){alert(data); window.location.href = data;},
+    success: function(data){window.location.href = data;},
     failure: function(errMsg) {
         alert(errMsg);
     }

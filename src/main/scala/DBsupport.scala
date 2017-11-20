@@ -53,4 +53,8 @@ object DBsupport {
 
   }
 
+  class ItemDao extends  DbConnected {
+
+  }
+
 }

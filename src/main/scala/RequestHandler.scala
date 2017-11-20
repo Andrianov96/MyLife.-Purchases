@@ -9,7 +9,7 @@ import spray.json.DefaultJsonProtocol
 
 import scala.util.Random
 
-class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonProtocol with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport{
+class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonProtocol with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport with ItemJsonSupport {
   private val logger = LoggerFactory.getLogger(classOf[RequestHandler])
   var cookieSet = CookiesSet(Map())
 
@@ -30,7 +30,7 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
           path("additem") {
             cookie("userName"){ cookieName =>
               if (cookieSet.contains(cookieName.value)) {
-                complete(s"The logged in user is '${cookieName.value}'")
+                getFromFile("src/main/resources/AddItem.html")
               } else {
                 complete(s"Such cookie is not contained")
               }
@@ -66,6 +66,14 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                   }
                 }
               }
+            }
+          } ~
+          path("addDefiniteItem") {
+            logger.debug("path addDefiniteItem")
+            entity(as[ItemToReceive]) { json =>
+              logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
+
+              complete("Item was received")
             }
           }
         }
