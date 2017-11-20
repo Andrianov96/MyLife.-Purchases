@@ -6,21 +6,48 @@
 </head>
 <body>
 <h1>Do you want to login?</h1>
-<form action="http://localhost:8080/login" id="myForm2" method="post">
+<form action="http://localhost:8080/" id="myForm2" method="post">
     <div >
         <label for="login">login</label>
         <input name="login" id="login" value="loginv">
     </div>
     <div>
         <label for="password">password</label>
-        <input name="password" value="passwordv">
+        <input name="password" id="password" value="passwordv">
     </div>
     <div>
         <button id = "btn">Send</button>
     </div>
 </form>
-<script src="sendform2.js">
+<script>
+    // Attach a submit handler to the form
+$( "#myForm2" ).submit(function( event ) {
 
+  // Stop form from submitting normally
+  event.preventDefault();
+
+ var myfun = function objectifyForm(formArray) {//serialize data function
+  var returnArray = {};
+  for (var i = 0; i < formArray.length; i++){
+    returnArray[formArray[i]['name']] = formArray[i]['value'];
+  }
+  return returnArray;
+}
+
+    var ar = $( "#myForm2" ).serializeArray()
+    var send = myfun(ar);
+
+$.ajax({
+    type: 'post',
+    url: "http://localhost:8080/login",
+    data: JSON.stringify(send),
+    contentType: "application/json",
+    success: function(data){window.location.href = data;},
+    failure: function(errMsg) {
+        alert(errMsg);
+    }
+});
+});
 </script>
 
 

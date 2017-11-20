@@ -9,8 +9,10 @@ import spray.json.DefaultJsonProtocol
 
 import scala.util.Random
 
-class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonProtocol with LoginPasswordJsonSupport{
+class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonProtocol with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport{
   private val logger = LoggerFactory.getLogger(classOf[RequestHandler])
+  var cookieSet = CookiesSet(Map())
+
   val route =
     cors() {
       get {
@@ -23,6 +25,15 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
           path("cookie") {
             cookie("userName"){ cookieName =>
               complete(s"The logged in user is '${cookieName.value}'")
+            }
+          } ~
+          path("additem") {
+            cookie("userName"){ cookieName =>
+              if (cookieSet.contains(cookieName.value)) {
+                complete(s"The logged in user is '${cookieName.value}'")
+              } else {
+                complete(s"Such cookie is not contained")
+              }
             }
           }
       } ~
@@ -49,8 +60,9 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                 deleteCookie("userName") {
                   logger.debug("cookie was deleted")
                   setCookie(HttpCookie("userName", value = rStr)) {
-                    logger.debug("cookie was setted")
-                    complete(HttpResponse(entity = "http://localhost:8080/cookie"))
+                    cookieSet = cookieSet.add(rStr, meetingPairs.head.id)
+                    logger.debug(s"cookie was setted $rStr -> ${meetingPairs.head.id} ")
+                    complete(HttpResponse(entity = "http://localhost:8080/additem"))
                   }
                 }
               }

@@ -20,7 +20,7 @@ $.ajax({
     url: "http://localhost:8080/login",
     data: JSON.stringify(send),
     contentType: "application/json",
-    success: function(data){window.location.href = data;},
+    success: function(data){alert(data); window.location.href = data;},
     failure: function(errMsg) {
         alert(errMsg);
     }

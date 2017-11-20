@@ -29,19 +29,23 @@ object DBsupport {
 
   //table name
   class LoginPasswordDao extends DbConnected {
-    def readAll(): List[LoginPassword] = {
+    def readAll(): List[IdLoginPassword] = {
       insideReadOnly { implicit session =>
         sql"SELECT * FROM MYTABLE".map(rs =>
-          LoginPassword(rs.string("login"),
+          IdLoginPassword(
+            rs.bigDecimal("id").toScalaBigDecimal,
+            rs.string("login"),
             rs.string("password")
             )).list().apply()
       }
     }
 
-    def findLoginPassword(login: String, password: String): List[LoginPassword] = {
+    def findLoginPassword(login: String, password: String): List[IdLoginPassword] = {
       insideReadOnly { implicit session =>
         sql"SELECT * FROM MYTABLE WHERE login = $login AND password = $password".map(rs =>
-          LoginPassword(rs.string("login"),
+          IdLoginPassword(
+            rs.bigDecimal("id").toScalaBigDecimal,
+            rs.string("login"),
             rs.string("password")
           )).list().apply()
       }
