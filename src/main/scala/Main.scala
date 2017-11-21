@@ -31,10 +31,13 @@ object WebServer1 {
 
     def connectionFromPool: Connection = ConnectionPool.borrow('demo_db)
     var stmt = connectionFromPool.createStatement
-    var sql = "CREATE TABLE MYTABLE " + "( id NUMBER, " +" login VARCHAR(255), " + " password VARCHAR(255))"
+    var sql = "CREATE TABLE MYTABLE( id NUMBER NOT NULL AUTO_INCREMENT, login VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id))"
+    var sql2 = "CREATE TABLE PURCHASES(id NUMBER NOT NULL AUTO_INCREMENT, user_id NUMBER NOT NULL, name VARCHAR(255)," +
+                " price NUMBER NOT NULL, data VARCHAR(255), place VARCHAR(255), type VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
     stmt.executeUpdate(sql)
-    stmt.executeUpdate("INSERT INTO MYTABLE " +
-      s"VALUES (1, 'loginv', 'passwordv')")
+    stmt.executeUpdate(sql2)
+    stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +
+      s"VALUES ('loginv', 'passwordv')")
     //DB initiation block
 
     val myRequestHandler = new RequestHandler
