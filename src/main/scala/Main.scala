@@ -33,7 +33,7 @@ object WebServer1 {
     var stmt = connectionFromPool.createStatement
     var sql = "CREATE TABLE MYTABLE( id NUMBER NOT NULL AUTO_INCREMENT, login VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id))"
     var sql2 = "CREATE TABLE PURCHASES(id NUMBER NOT NULL AUTO_INCREMENT, user_id NUMBER NOT NULL, name VARCHAR(255)," +
-                " price NUMBER NOT NULL, data VARCHAR(255), place VARCHAR(255), type VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
+                " price NUMBER NOT NULL, date VARCHAR(255), place VARCHAR(255), itemtype VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
     stmt.executeUpdate(sql)
     stmt.executeUpdate(sql2)
     stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +

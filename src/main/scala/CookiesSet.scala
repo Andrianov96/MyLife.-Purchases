@@ -15,7 +15,11 @@ case class CookiesSet(cMap: Map [String, BigDecimal]) {
 
   def getId(s: String) = cMap.contains(s) match {
     case true => cMap(s)
-    case false => logger.error("gitting Id cookie that doesnt contained by CookiesSet")
+    case false => {
+      logger.error("getting Id cookie that doesnt contained by CookiesSet")
+      val a:BigDecimal = -1
+      a
+    }
   }
 
   def contains(s: String) = cMap.contains(s)

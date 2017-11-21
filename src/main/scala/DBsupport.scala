@@ -53,8 +53,29 @@ object DBsupport {
 
   }
 
-  class ItemDao extends  DbConnected {
+  class PurchaseDao extends  DbConnected {
+    def readAll(): List[Purchase] = {
+      insideReadOnly { implicit session =>
+        sql"SELECT * FROM PURCHASES".map(rs =>
+          Purchase(
+            rs.bigDecimal("id").toScalaBigDecimal,
+            rs.bigDecimal("user_id").toScalaBigDecimal,
+            rs.string("name"),
+            rs.bigDecimal("price").toScalaBigDecimal,
+            rs.string("date"),
+            rs.string("place"),
+            rs.string("itemType")
+          )).list().apply()
+      }
+    }
 
+    def insert(user_id: BigDecimal, name: String, price: Double, date: String, place: String, itemType: String) = {
+      insideLocalTx { implicit session =>
+        val strToExecute = sql"""INSERT INTO PURCHASES(user_id, name, price, date, place, itemtype)
+          VALUES ($user_id, $name, $price, $date, $place, $itemType)"""
+        strToExecute.execute().apply()
+      }
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-import DBsupport.LoginPasswordDao
+import DBsupport.{LoginPasswordDao, PurchaseDao}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.model.headers.HttpCookie
@@ -19,22 +19,24 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
         pathSingleSlash {
           setCookie(HttpCookie("userName", value = "paul")) {
             logger.debug("get method")
-            getFromFile("src/main/resources/ShowCookie.html")
+            getFromFile("src/main/resources/html/ShowCookie.html")
           }
         } ~
           path("cookie") {
-            cookie("userName"){ cookieName =>
+            cookie("userName") { cookieName =>
               complete(s"The logged in user is '${cookieName.value}'")
             }
           } ~
           path("additem") {
-            cookie("userName"){ cookieName =>
-              if (cookieSet.contains(cookieName.value)) {
-                getFromFile("src/main/resources/AddItem.html")
-              } else {
-                complete(s"Such cookie is not contained")
-              }
+            cookie("userName") { cookieName =>
+              if (cookieSet.contains(cookieName.value))
+                getFromFile("src/main/resources/html/AddItem.html")
+              else
+                complete(s"src/main/resources/html/WrongCookie.html")
             }
+          } ~
+          path("wrongcookie") {
+            getFromFile("src/main/resources/html/WrongCookie.html")
           }
       } ~
         post {
@@ -68,15 +70,22 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
               }
             }
           } ~
-          path("addDefiniteItem") {
-            logger.debug("path addDefiniteItem")
-            entity(as[ItemToReceive]) { json =>
-              logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
-
-              complete("Item was received")
+            path("addDefiniteItem") {
+              logger.debug("path addDefiniteItem")
+              cookie("userName") { cookieName =>
+                if (cookieSet.contains(cookieName.value))
+                  entity(as[ItemToReceive]) { json =>
+                    logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
+                    val purchaseDao = new PurchaseDao
+                    purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
+                    complete("Item was received")
+                  }
+                else
+                  complete(HttpResponse(entity = "http://localhost:8080/wrongcookie"))
+              }
             }
-          }
         }
     }
-
 }
+
+
