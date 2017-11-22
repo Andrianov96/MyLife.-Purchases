@@ -13,6 +13,8 @@ object UsefulThings {
       case "less" => "<"
       case "equal" => "="
       case "greater" => ">"
+      case "less or equal" => "<="
+      case "greater or equal" => ">="
       case _ => {
         logger.error("bad string in LessEqualGreater")
         ""
@@ -22,7 +24,7 @@ object UsefulThings {
 
   case class PriceConstraint(price: Double, leg: LessEqualGreater) extends  Constraint{
     def getSQLString(): String ={
-        s"AND price ${leg.getSignString()} $price"
+        s"price ${leg.getSignString()} $price AND"
     }
   }
 //  case class DateConstraint(date: String, leg: LessEqualGreater) extends Constraint{
@@ -34,14 +36,14 @@ object UsefulThings {
   def getSQLString(): String = {
     name match{
       case "" => ""
-      case _ => s"name = '$name'"
+      case _ => s"name = '$name' AND"
     }
   }
 }
 
   case class ItemTypeConstraint(constraint: String) extends  Constraint{
     def getSQLString(): String = {
-      if (constraint != "Any") s"AND itemType = '$constraint'" else ""
+      if (constraint != "any") s"AND itemType = '$constraint'" else ""
     }
   }
 

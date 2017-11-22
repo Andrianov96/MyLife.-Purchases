@@ -84,7 +84,7 @@ object DBsupport {
                        date: String, place: String,
                        itemType: ItemTypeConstraint):List[ItemToReceive] ={
       insideReadOnly { implicit session =>
-        val st = SQLSyntax.createUnsafely(s"SELECT * FROM PURCHASES WHERE ${name.getSQLString()} ${price.getSQLString()} AND date = '$date' AND place = '$place' ${itemType.getSQLString()}")
+        val st = SQLSyntax.createUnsafely(s"SELECT * FROM PURCHASES WHERE user_id = $user_id AND ${name.getSQLString()} ${price.getSQLString()} date = '$date' AND place = '$place' ${itemType.getSQLString()}")
         sql"""$st""".map(rs =>
           ItemToReceive(
             rs.string("name"),

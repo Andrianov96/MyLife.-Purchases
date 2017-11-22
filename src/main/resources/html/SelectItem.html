@@ -14,14 +14,21 @@
     <div>
         <label for="price">price</label>
         <select name = "priceLEG">
-            <option value="Less">Less</option>
-            <option value="Equal">Equal</option>
-            <option value="Greater">Greater</option>
+            <option value="greater or equal">>=</option>
+            <option value="less or equal"><=</option>
+            <option value="Less"><</option>
+            <option value="Equal">=</option>
+            <option value="Greater">></option>
         </select>
         <input name="price" id="price" value="14.88">
     </div>
     <div>
         <label for="date">date</label>
+        <select name = "dateLEG">
+            <option value="Less">Less</option>
+            <option value="Equal">Equal</option>
+            <option value="Greater">Greater</option>
+        </select>
         <input name="date" id="date" value="14.05.2022">
     </div>
     <div>
@@ -32,7 +39,8 @@
         <select name = "itemType">
             <option value="food">Food</option>
             <option value="clothes">Clothes</option>
-            <option value="clothes">Other</option>
+            <option value="other">Other</option>
+            <option value="any">Any</option>
         </select>
     </div>
     <div>

@@ -38,6 +38,8 @@ object WebServer1 {
     stmt.executeUpdate(sql2)
     stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +
       s"VALUES ('loginv', 'passwordv')")
+    stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +
+      s"VALUES ('loginv1', 'passwordv1')")
     //DB initiation block
 
     val myRequestHandler = new RequestHandler
