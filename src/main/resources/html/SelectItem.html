@@ -13,6 +13,11 @@
     </div>
     <div>
         <label for="price">price</label>
+        <select name = "priceLEG">
+            <option value="Less">Less</option>
+            <option value="Equals">Equals</option>
+            <option value="Greater">Greater</option>
+        </select>
         <input name="price" id="price" value="14.88">
     </div>
     <div>
@@ -27,14 +32,19 @@
         <select name = "itemType">
             <option value="food">Food</option>
             <option value="clothes">Clothes</option>
-            <option value="other">Other</option>
+            <option value="clothes">Other</option>
         </select>
     </div>
     <div>
         <button id = "btn">Send</button>
     </div>
 </form>
-<script>
+
+<table border="1" id="myTable">
+
+</table>
+
+<script >
     // Attach a submit handler to the form
 $( "#myForm2" ).submit(function( event ) {
 
@@ -51,10 +61,9 @@ $( "#myForm2" ).submit(function( event ) {
 
     var ar = $( "#myForm2" ).serializeArray()
     var send = myfun(ar);
-
 $.ajax({
     type: 'post',
-    url: "http://localhost:8080/addDefiniteItem",
+    url: "http://localhost:8080/selectDefiniteItem",
     data: JSON.stringify(send),
     contentType: "application/json",
     success: function(data){window.location.href = data;},

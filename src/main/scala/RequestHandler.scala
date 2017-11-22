@@ -16,6 +16,7 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
   val route =
     cors() {
       get {
+        logger.debug("get method")
         pathSingleSlash {
           setCookie(HttpCookie("userName", value = "paul")) {
             logger.debug("get method")
@@ -37,6 +38,18 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
           } ~
           path("wrongcookie") {
             getFromFile("src/main/resources/html/WrongCookie.html")
+          } ~
+          path("addorselect") {
+            getFromFile("src/main/resources/html/AddOrSelect.html")
+          } ~
+          path("selectItem") {
+            getFromFile("src/main/resources/html/SelectItem.html")
+          } ~
+          path("loginError") {
+            getFromFile("src/main/resources/html/LoginError.html")
+          } ~
+          path("loginPage") {
+            getFromFile("src/main/resources/html/LoginPage.html")
           }
       } ~
         post {
@@ -54,7 +67,7 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
               }
               else if (meetingPairs.isEmpty) {
                 logger.debug("emptyResult")
-                complete("")
+                complete(HttpResponse(entity = "http://localhost:8080/loginError"))
               }
               else {
                 logger.debug("matched user" + meetingPairs.head.toString)
@@ -64,7 +77,7 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                   setCookie(HttpCookie("userName", value = rStr)) {
                     cookieSet = cookieSet.add(rStr, meetingPairs.head.id)
                     logger.debug(s"cookie was setted $rStr -> ${meetingPairs.head.id} ")
-                    complete(HttpResponse(entity = "http://localhost:8080/additem"))
+                    complete(HttpResponse(entity = "http://localhost:8080/addorselect"))
                   }
                 }
               }
@@ -78,6 +91,20 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                     logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
                     val purchaseDao = new PurchaseDao
                     purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
+                    complete("Item was received")
+                  }
+                else
+                  complete(HttpResponse(entity = "http://localhost:8080/wrongcookie"))
+              }
+            }  ~
+            path("selectDefiniteItem"){
+              logger.debug("path selectDefiniteItem")
+              cookie("userName") { cookieName =>
+                if (cookieSet.contains(cookieName.value))
+                  entity(as[ItemForSelect]) { json =>
+                    logger.debug(s"received item - ${json.name} ${json.priceLEG} ${json.price} ${json.date} ${json.place} ${json.itemType}")
+//                    val purchaseDao = new PurchaseDao
+//                    purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
                     complete("Item was received")
                   }
                 else

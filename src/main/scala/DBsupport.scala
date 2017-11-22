@@ -76,6 +76,8 @@ object DBsupport {
         strToExecute.execute().apply()
       }
     }
+
+    //def readAllForUser(user_id:BigDecimal)
   }
 
 }
