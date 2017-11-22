@@ -1,16 +1,17 @@
 import DBsupport.{LoginPasswordDao, PurchaseDao}
 import UsefulThings.{ItemTypeConstraint, LessEqualGreater, NameConstraint, PriceConstraint}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.HttpResponse
+import akka.http.scaladsl.model.{ContentTypes, HttpResponse, ResponseEntity}
 import akka.http.scaladsl.model.headers.HttpCookie
 import akka.http.scaladsl.server.Directives
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import org.slf4j.LoggerFactory
 import spray.json.DefaultJsonProtocol
+import spray.json._
 
 import scala.util.Random
 
-class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonProtocol with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport with ItemJsonSupport {
+class RequestHandler extends Directives with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport with ItemJsonSupport with ItemForSelectJsonSupport with SprayJsonSupport with DefaultJsonProtocol{
   private val logger = LoggerFactory.getLogger(classOf[RequestHandler])
   var cookieSet = CookiesSet(Map())
 
@@ -92,7 +93,7 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                     logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
                     val purchaseDao = new PurchaseDao
                     purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
-                    complete("Item was received")
+                    complete(HttpResponse(entity = "http://localhost:8080/addorselect"))
                   }
                 else
                   complete(HttpResponse(entity = "http://localhost:8080/wrongcookie"))
@@ -110,9 +111,12 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                       PriceConstraint(json.price.toDouble, LessEqualGreater(json.priceLEG)),
                       json.date,
                       json.place,
-                      ItemTypeConstraint(json.itemType))
-                    res.foreach(println(_))
-                    complete("Item was received")
+                      ItemTypeConstraint(json.itemType)).toArray
+                    res.foreach(s=> logger.debug("selected item" + s.toString))
+
+                    var entity2: ResponseEntity = res.toJson.compactPrint
+                    entity2 = entity2.withContentType(ContentTypes.`application/json`)
+                    complete(HttpResponse(entity = entity2))
                   }
                 else
                   complete(HttpResponse(entity = "http://localhost:8080/wrongcookie"))

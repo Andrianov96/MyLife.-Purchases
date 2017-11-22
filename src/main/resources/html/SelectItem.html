@@ -66,7 +66,31 @@ $.ajax({
     url: "http://localhost:8080/selectDefiniteItem",
     data: JSON.stringify(send),
     contentType: "application/json",
-    success: function(data){window.location.href = data;},
+    dataType: "json",
+    success: function(data){
+            //alert(data.length);
+            var content = '';
+            var myArray = ['name', 'price', 'date', 'place', 'itemType'];
+            content +='<tr>';
+            for (var pointer = 0; pointer < myArray.length; pointer++){
+               content += '<td><b>' +myArray[pointer] + '</b></td>';
+            }
+            content += '</td>';
+            for (var i = 0; i < data.length; i++) {
+               content += '<tr>';
+               var pointer = 0;
+               for (var pointer = 0; pointer < myArray.length; pointer++){
+                    if (data[i][myArray[pointer]] == undefined){
+                        content += '<td></td>';
+                    } else {
+                        content += '<td>' + data[i][myArray[pointer]] + '</td>';
+                    }
+               }
+               content += '<tr>';
+            }
+            $('#myTable').html(content);
+       },
+
     failure: function(errMsg) {
         alert(errMsg);
     }
