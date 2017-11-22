@@ -1,5 +1,7 @@
 import scalikejdbc.{ConnectionPool, DB, DBSession, using}
 import java.sql.Connection
+
+import UsefulThings.{ItemTypeConstraint, NameConstraint, PriceConstraint}
 import scalikejdbc._
 import scalikejdbc.{ConnectionPool, DB, DBSession}
 import scalikejdbc.config.DBs
@@ -77,7 +79,22 @@ object DBsupport {
       }
     }
 
-    //def readAllForUser(user_id:BigDecimal)
+    def readAllForUser(user_id:BigDecimal,
+                       name: NameConstraint, price: PriceConstraint,
+                       date: String, place: String,
+                       itemType: ItemTypeConstraint):List[ItemToReceive] ={
+      insideReadOnly { implicit session =>
+        val st = SQLSyntax.createUnsafely(s"SELECT * FROM PURCHASES WHERE ${name.getSQLString()} ${price.getSQLString()} AND date = '$date' AND place = '$place' ${itemType.getSQLString()}")
+        sql"""$st""".map(rs =>
+          ItemToReceive(
+            rs.string("name"),
+            rs.bigDecimal("price").toString,
+            rs.string("date"),
+            rs.string("place"),
+            rs.string("itemType")
+          )).list().apply()
+      }
+    }
   }
 
 }

@@ -1,4 +1,5 @@
 import DBsupport.{LoginPasswordDao, PurchaseDao}
+import UsefulThings.{ItemTypeConstraint, LessEqualGreater, NameConstraint, PriceConstraint}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.model.headers.HttpCookie
@@ -103,8 +104,14 @@ class RequestHandler extends Directives  with SprayJsonSupport with DefaultJsonP
                 if (cookieSet.contains(cookieName.value))
                   entity(as[ItemForSelect]) { json =>
                     logger.debug(s"received item - ${json.name} ${json.priceLEG} ${json.price} ${json.date} ${json.place} ${json.itemType}")
-//                    val purchaseDao = new PurchaseDao
-//                    purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
+                    val purchaseDao = new PurchaseDao
+                    val res = purchaseDao.readAllForUser(cookieSet.getId(cookieName.value),
+                      NameConstraint(json.name),
+                      PriceConstraint(json.price.toDouble, LessEqualGreater(json.priceLEG)),
+                      json.date,
+                      json.place,
+                      ItemTypeConstraint(json.itemType))
+                    res.foreach(println(_))
                     complete("Item was received")
                   }
                 else
