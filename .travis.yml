@@ -10,4 +10,4 @@ env:
     - CODECOV_TOKEN=:3665324d-042a-4b36-aad1-92eecc1bac35
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -t 3665324d-042a-4b36-aad1-92eecc1bac35
+  - bash <(curl -s https://codecov.io/bash) -t 7b2740a5-2b66-44fd-8f1c-e630b1d65a9e
