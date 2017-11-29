@@ -25,4 +25,12 @@ class CookiesSetTest extends FlatSpec with Matchers {
   "getId" should "return id if element is in cookieSet" in new mocks{
     emptyCookieSet.add(randomStr, randomValue).getId(randomStr) should be(randomValue)
   }
+
+  it should "return -1 on not contained element" in new mocks {
+    emptyCookieSet.getId(randomStr) should be(-1)
+  }
+
+  "delete" should "delete contained element" in new mocks {
+    emptyCookieSet.add(randomStr, randomValue).delete(randomStr).contains(randomStr) should be(false)
+  }
 }

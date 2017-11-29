@@ -74,14 +74,12 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
               else {
                 logger.debug("matched user" + meetingPairs.head.toString)
                 val rStr = Random.nextLong().toString
-                deleteCookie("userName") {
                   logger.debug("cookie was deleted")
                   setCookie(HttpCookie("userName", value = rStr)) {
                     cookieSet = cookieSet.add(rStr, meetingPairs.head.id)
                     logger.debug(s"cookie was setted $rStr -> ${meetingPairs.head.id} ")
                     complete(HttpResponse(entity = "http://localhost:8080/addorselect"))
                   }
-                }
               }
             }
           } ~
