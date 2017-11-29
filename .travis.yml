@@ -1,0 +1,7 @@
+language: scala
+scala:
+   - 2.12.3
+
+env:
+  global:
+    - CODECOV_TOKEN=:3665324d-042a-4b36-aad1-92eecc1bac35
