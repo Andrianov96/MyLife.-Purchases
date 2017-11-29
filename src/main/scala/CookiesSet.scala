@@ -5,7 +5,7 @@ case class CookiesSet(cMap: Map [String, BigDecimal]) {
 
   def add(s: String, id: BigDecimal) = CookiesSet(cMap + (s -> id))
 
-  def delete(s: String) = cMap.contains(s) match {
+  def delete(s: String):CookiesSet = cMap.contains(s) match {
     case true => CookiesSet(cMap - s)
     case false => {
       logger.error("deleting cookie that doesnt contained by CookiesSet")
@@ -13,7 +13,7 @@ case class CookiesSet(cMap: Map [String, BigDecimal]) {
     }
   }
 
-  def getId(s: String) = cMap.contains(s) match {
+  def getId(s: String):BigDecimal = cMap.contains(s) match {
     case true => cMap(s)
     case false => {
       logger.error("getting Id cookie that doesnt contained by CookiesSet")
@@ -22,5 +22,5 @@ case class CookiesSet(cMap: Map [String, BigDecimal]) {
     }
   }
 
-  def contains(s: String) = cMap.contains(s)
+  def contains(s: String):Boolean = cMap.contains(s)
 }
