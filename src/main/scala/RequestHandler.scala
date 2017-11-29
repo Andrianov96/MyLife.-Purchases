@@ -1,5 +1,5 @@
 import DBsupport.{LoginPasswordDao, PurchaseDao}
-import UsefulThings.{ItemTypeConstraint, LessEqualGreater, NameConstraint, PriceConstraint}
+import UsefulThings._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{ContentTypes, HttpResponse, ResponseEntity}
 import akka.http.scaladsl.model.headers.HttpCookie
@@ -106,9 +106,9 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
                     val purchaseDao = new PurchaseDao
                     val res = purchaseDao.readAllForUser(cookieSet.getId(cookieName.value),
                       NameConstraint(json.name),
-                      PriceConstraint(json.price.toDouble, LessEqualGreater(json.priceLEG)),
+                      PriceConstraint(json.price, LessEqualGreater(json.priceLEG)),
                       json.date,
-                      json.place,
+                      PlaceConstraint(json.place),
                       ItemTypeConstraint(json.itemType)).toArray
                     res.foreach(s=> logger.debug("selected item" + s.toString))
 

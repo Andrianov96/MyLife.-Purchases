@@ -22,9 +22,10 @@ object UsefulThings {
     }
   }
 
-  case class PriceConstraint(price: Double, leg: LessEqualGreater) extends  Constraint{
-    def getSQLString(): String ={
-        s"price ${leg.getSignString()} $price AND"
+  case class PriceConstraint(price: String, leg: LessEqualGreater) extends  Constraint{
+    def getSQLString(): String = price match {
+      case x if x.length > 0 =>s"price ${leg.getSignString()} $price AND"
+      case _ => ""
     }
   }
 //  case class DateConstraint(date: String, leg: LessEqualGreater) extends Constraint{
@@ -33,18 +34,26 @@ object UsefulThings {
 //    }
 //  }
   case class NameConstraint(name: String) extends  Constraint{
-  def getSQLString(): String = {
-    name match{
+  def getSQLString(): String = name match{
       case "" => ""
       case _ => s"name = '$name' AND"
     }
-  }
+
 }
 
   case class ItemTypeConstraint(constraint: String) extends  Constraint{
     def getSQLString(): String = {
       if (constraint != "any") s"AND itemType = '$constraint'" else ""
     }
+  }
+
+  case class PlaceConstraint(place: String) extends  Constraint{
+    def getSQLString(): String = place match{
+      case "" => ""
+      case _ => s"AND place = '$place'"
+    }
+
+
   }
 
 }
