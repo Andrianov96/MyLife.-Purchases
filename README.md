@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Andrianov96/MyLife.-Purchases.svg?branch=master)](https://travis-ci.org/Andrianov96/MyLife.-Purchases)
+
 # MyLife.-Purchases
 ## MyLife.Puchase - сервис для хранения информации о сделанных покупках 
 Покупки вводятся вручную
@@ -16,3 +18,5 @@ HTML page + JS -> API (Scala) -> DB -> API (Scala) -> HTML page + JS
 # Copyright
 
 Copyright © 2017 Andrianov Georgiy
+
+
