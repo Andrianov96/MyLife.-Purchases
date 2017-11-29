@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Andrianov96/MyLife.-Purchases.svg?branch=master)](https://travis-ci.org/Andrianov96/MyLife.-Purchases)
+[![codecov](https://codecov.io/gh/Andrianov96/MyLife.-Purchases/branch/master/graph/badge.svg)](https://codecov.io/gh/Andrianov96/MyLife.-Purchases)
 
 # MyLife.-Purchases
 ## MyLife.Puchase - сервис для хранения информации о сделанных покупках 
