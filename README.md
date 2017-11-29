@@ -16,6 +16,9 @@ HTML page + JS -> API (Scala) -> DB -> API (Scala) -> HTML page + JS
 3. Akka HTTP(Scala) - обработка запросов на сервере
 4. ScalikeJDBC - работа с базой данных
 
+## Поддерживаемые технологии
+В данный момент работа возможно только в браузере Internet Explorer более современные браузеры пока не поддерживаются
+
 # Copyright
 
 Copyright © 2017 Andrianov Georgiy
