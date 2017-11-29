@@ -42,8 +42,6 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += "ch.megard" %% "akka-http-cors" % "0.2.2"
-libraryDependencies +=
-  "com.oracle" % "ojdbc6" % "11.2.0.1.0"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.6",
