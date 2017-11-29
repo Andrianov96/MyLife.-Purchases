@@ -2,6 +2,12 @@ language: scala
 scala:
    - 2.12.3
 
+script:
+  - sbt clean coverage test coverageReport
+
 env:
   global:
     - CODECOV_TOKEN=:3665324d-042a-4b36-aad1-92eecc1bac35
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t 3665324d-042a-4b36-aad1-92eecc1bac35
