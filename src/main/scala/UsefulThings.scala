@@ -3,6 +3,8 @@ import scalikejdbc._
 
 object UsefulThings {
 
+  val curLocalHost = "localhost.com"
+
   trait Constraint{
     def getSQLString(): String
   }

@@ -14,6 +14,7 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import scalikejdbc._
 import scalikejdbc.{ConnectionPool, DB, DBSession}
 import scalikejdbc.config.DBs
+import UsefulThings._
 import com.typesafe.scalalogging._
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -43,7 +44,7 @@ object WebServer1 {
     //DB initiation block
 
     val myRequestHandler = new RequestHandler
-    val bindingFuture = Http().bindAndHandle(myRequestHandler.route, "localhost", 8080)
+    val bindingFuture = Http().bindAndHandle(myRequestHandler.route, curLocalHost, 8080)
     println(s"Server online at http://localhost.com:8080/\nPress RETURN to stop...")
     var s = scala.io.StdIn.readLine()
     bindingFuture

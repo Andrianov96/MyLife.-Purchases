@@ -71,7 +71,7 @@ $( "#myForm2" ).submit(function( event ) {
     var send = myfun(ar);
 $.ajax({
     type: 'post',
-    url: "http://localhost:8080/selectDefiniteItem",
+    url: "http://localhost.com:8080/selectDefiniteItem",
     data: JSON.stringify(send),
     contentType: "application/json",
     dataType: "json",

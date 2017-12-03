@@ -20,10 +20,10 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
       get {
         logger.debug("get method")
         pathSingleSlash {
-          setCookie(HttpCookie("userName", value = "paul")) {
-            logger.debug("get method")
-            getFromFile("src/main/resources/html/ShowCookie.html")
-          }
+          //setCookie(HttpCookie("userName", value = "paul")) {
+            logger.debug("single slash")
+            getFromFile("src/main/resources/html/LoginPage.html")
+          //}
         } ~
           path("cookie") {
             cookie("userName") { cookieName =>
@@ -34,12 +34,17 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
             cookie("userName") { cookieName =>
               if (cookieSet.contains(cookieName.value))
                 getFromFile("src/main/resources/html/AddItem.html")
-              else
+              else {
+                logger.debug(s"wrongcookie = ${cookieName.value}")
                 complete(s"src/main/resources/html/WrongCookie.html")
+              }
             }
           } ~
           path("wrongcookie") {
-            getFromFile("src/main/resources/html/WrongCookie.html")
+            cookie("userName") { cookie =>
+              logger.debug(s"wrongcookie = ${cookie.value}")
+              getFromFile("src/main/resources/html/WrongCookie.html")
+            }
           } ~
           path("addorselect") {
             getFromFile("src/main/resources/html/AddOrSelect.html")
@@ -69,17 +74,19 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
               }
               else if (meetingPairs.isEmpty) {
                 logger.debug("emptyResult")
-                complete(HttpResponse(entity = "http://localhost:8080/loginError"))
+                complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/loginError"))
               }
               else {
                 logger.debug("matched user" + meetingPairs.head.toString)
                 val rStr = Random.nextLong().toString
+                //deleteCookie("userName") {
                   logger.debug("cookie was deleted")
                   setCookie(HttpCookie("userName", value = rStr)) {
                     cookieSet = cookieSet.add(rStr, meetingPairs.head.id)
                     logger.debug(s"cookie was setted $rStr -> ${meetingPairs.head.id} ")
-                    complete(HttpResponse(entity = "http://localhost:8080/addorselect"))
+                    complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
                   }
+                //}
               }
             }
           } ~
@@ -91,10 +98,10 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
                     logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
                     val purchaseDao = new PurchaseDao
                     purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
-                    complete(HttpResponse(entity = "http://localhost:8080/addorselect"))
+                    complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
                   }
                 else
-                  complete(HttpResponse(entity = "http://localhost:8080/wrongcookie"))
+                  complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/wrongcookie"))
               }
             }  ~
             path("selectDefiniteItem"){
@@ -117,7 +124,7 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
                     complete(HttpResponse(entity = entity2))
                   }
                 else
-                  complete(HttpResponse(entity = "http://localhost:8080/wrongcookie"))
+                  complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/wrongcookie"))
               }
             }
         }

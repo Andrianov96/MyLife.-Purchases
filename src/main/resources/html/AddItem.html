@@ -54,7 +54,7 @@ $( "#myForm2" ).submit(function( event ) {
 
 $.ajax({
     type: 'post',
-    url: "http://localhost:8080/addDefiniteItem",
+    url: "http://localhost.com:8080/addDefiniteItem",
     data: JSON.stringify(send),
     contentType: "application/json",
     success: function(data){window.location.href = data;},
