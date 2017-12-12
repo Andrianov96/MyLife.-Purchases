@@ -3,7 +3,7 @@ import scalikejdbc._
 
 object UsefulThings {
 
-  val curLocalHost = "localhost.com"
+  val curLocalHost = "localhost"
 
   trait Constraint{
     def getSQLString(): String
@@ -26,19 +26,19 @@ object UsefulThings {
 
   case class PriceConstraint(price: String, leg: LessEqualGreater) extends  Constraint{
     def getSQLString(): String = price match {
-      case x if x.length > 0 =>s"price ${leg.getSignString()} $price AND"
+      case x if x.length > 0 =>s"AND price ${leg.getSignString()} $price"
       case _ => ""
     }
   }
-//  case class DateConstraint(date: String, leg: LessEqualGreater) extends Constraint{
-//    def getSQLString(): String ={
-//      s"WHERE date ${leg.getSignString()} ${price}"
-//    }
-//  }
+  case class DateConstraint(date: String, leg: LessEqualGreater) extends Constraint{
+    def getSQLString(): String ={
+      s"AND date ${leg.getSignString()} '$date'"
+    }
+  }
   case class NameConstraint(name: String) extends  Constraint{
   def getSQLString(): String = name match{
       case "" => ""
-      case _ => s"name = '$name' AND"
+      case _ => s"AND name = '$name'"
     }
 
 }

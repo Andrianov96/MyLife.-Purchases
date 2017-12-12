@@ -6,5 +6,5 @@ trait ItemJsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 }
 
 trait ItemForSelectJsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val dataFormatI2 = jsonFormat6(ItemForSelect)
+  implicit val dataFormatI2 = jsonFormat7(ItemForSelect)
 }

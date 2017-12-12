@@ -109,12 +109,12 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
               cookie("userName") { cookieName =>
                 if (cookieSet.contains(cookieName.value))
                   entity(as[ItemForSelect]) { json =>
-                    logger.debug(s"received item - ${json.name} ${json.priceLEG} ${json.price} ${json.date} ${json.place} ${json.itemType}")
+                    logger.debug(s"received item - ${json.name} ${json.priceLEG} ${json.price} ${json.dateLEG} ${json.date} ${json.place} ${json.itemType}")
                     val purchaseDao = new PurchaseDao
                     val res = purchaseDao.readAllForUser(cookieSet.getId(cookieName.value),
                       NameConstraint(json.name),
                       PriceConstraint(json.price, LessEqualGreater(json.priceLEG)),
-                      json.date,
+                      DateConstraint(json.date, LessEqualGreater(json.dateLEG)),
                       PlaceConstraint(json.place),
                       ItemTypeConstraint(json.itemType)).toArray
                     res.foreach(s=> logger.debug("selected item" + s.toString))

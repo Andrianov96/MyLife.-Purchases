@@ -45,7 +45,7 @@ object WebServer1 {
 
     val myRequestHandler = new RequestHandler
     val bindingFuture = Http().bindAndHandle(myRequestHandler.route, curLocalHost, 8080)
-    println(s"Server online at http://localhost.com:8080/\nPress RETURN to stop...")
+    println(s"Server online at http://" + curLocalHost + ":8080/\nPress RETURN to stop...")
     var s = scala.io.StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port

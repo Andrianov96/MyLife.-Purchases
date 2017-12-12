@@ -34,6 +34,12 @@
         <button id = "btn">Send</button>
     </div>
 </form>
+<form action="http://localhost:8080/addorselect" id="myForm" method="get">
+    <div>
+        <button id = "btn">go to menu</button>
+    </div>
+</form>
+
 <script>
     // Attach a submit handler to the form
 $( "#myForm2" ).submit(function( event ) {
@@ -54,7 +60,7 @@ $( "#myForm2" ).submit(function( event ) {
 
 $.ajax({
     type: 'post',
-    url: "http://localhost.com:8080/addDefiniteItem",
+    url: "http://localhost:8080/addDefiniteItem",
     data: JSON.stringify(send),
     contentType: "application/json",
     success: function(data){window.location.href = data;},

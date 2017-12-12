@@ -1,7 +1,7 @@
 import scalikejdbc.{ConnectionPool, DB, DBSession, using}
 import java.sql.Connection
 
-import UsefulThings.{ItemTypeConstraint, NameConstraint, PlaceConstraint, PriceConstraint}
+import UsefulThings._
 import scalikejdbc._
 import scalikejdbc.{ConnectionPool, DB, DBSession}
 import scalikejdbc.config.DBs
@@ -81,10 +81,10 @@ object DBsupport {
 
     def readAllForUser(user_id:BigDecimal,
                        name: NameConstraint, price: PriceConstraint,
-                       date: String, place: PlaceConstraint,
+                       date: DateConstraint, place: PlaceConstraint,
                        itemType: ItemTypeConstraint):List[ItemToReceive] ={
       insideReadOnly { implicit session =>
-        val st = SQLSyntax.createUnsafely(s"SELECT * FROM PURCHASES WHERE user_id = $user_id AND ${name.getSQLString()} ${price.getSQLString()} date = '$date' ${place.getSQLString()} ${itemType.getSQLString()}")
+        val st = SQLSyntax.createUnsafely(s"SELECT * FROM PURCHASES WHERE user_id = $user_id ${name.getSQLString()} ${price.getSQLString()} ${date.getSQLString()} ${place.getSQLString()} ${itemType.getSQLString()}")
         sql"""$st""".map(rs =>
           ItemToReceive(
             rs.string("name"),
