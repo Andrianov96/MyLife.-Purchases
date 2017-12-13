@@ -19,9 +19,10 @@ class GetHandler(cookieSet: CookiesSet) extends Directives{
             getFromFile("src/main/resources/html/AddItem.html")
           else {
             logger.debug(s"wrongcookie = ${cookieName.value}")
-            complete(s"src/main/resources/html/WrongCookie.html")
+            getFromFile("src/main/resources/html/WrongCookie.html")
           }
-        }
+        } ~
+          getFromFile("src/main/resources/html/WrongCookie.html")
       } ~
       path("wrongcookie") {
         cookie("userName") { cookie =>
