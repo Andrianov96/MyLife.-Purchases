@@ -25,9 +25,11 @@
     <div>
         <label for="date">date</label>
         <select name = "dateLEG">
-            <option value="Less">Less</option>
-            <option value="Equal">Equal</option>
-            <option value="Greater">Greater</option>
+            <option value="greater or equal">>=</option>
+            <option value="less or equal"><=</option>
+            <option value="Less"><</option>
+            <option value="Equal">=</option>
+            <option value="Greater">></option>
         </select>
         <input name="date" id="date" value="2022-10-11">
     </div>
@@ -45,6 +47,12 @@
     </div>
     <div>
         <button id = "btn">Send</button>
+    </div>
+</form>
+
+<form action="http://localhost:8080/addorselect" id="myForm" method="get">
+    <div>
+        <button id = "btn">go to menu</button>
     </div>
 </form>
 

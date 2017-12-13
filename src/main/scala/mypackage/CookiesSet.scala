@@ -1,15 +1,20 @@
+package mypackage
+
 import org.slf4j.LoggerFactory
 
-case class CookiesSet(cMap: Map [String, BigDecimal]) {
+class CookiesSet(var cMap: Map [String, BigDecimal]) {
   private val logger = LoggerFactory.getLogger(classOf[CookiesSet])
 
-  def add(s: String, id: BigDecimal) = CookiesSet(cMap + (s -> id))
+  def add(s: String, id: BigDecimal):Unit ={
+    cMap = cMap + (s -> id)
+  }
 
-  def delete(s: String):CookiesSet = cMap.contains(s) match {
-    case true => CookiesSet(cMap - s)
+  def delete(s: String):Unit = cMap.contains(s) match {
+    case true => {
+      cMap = cMap - s
+    }
     case false => {
       logger.error("deleting cookie that doesnt contained by CookiesSet")
-      CookiesSet(cMap - s)
     }
   }
 
