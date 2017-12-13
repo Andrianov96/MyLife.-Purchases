@@ -3,7 +3,8 @@ import UsefulThings._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{ContentTypes, HttpResponse, ResponseEntity}
 import akka.http.scaladsl.model.headers.HttpCookie
-import akka.http.scaladsl.server.Directives
+import akka.http.scaladsl.server
+import akka.http.scaladsl.server.{Directives, StandardRoute}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import org.slf4j.LoggerFactory
 import spray.json.DefaultJsonProtocol
@@ -15,50 +16,26 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
   private val logger = LoggerFactory.getLogger(classOf[RequestHandler])
   var cookieSet = CookiesSet(Map())
 
+
+  def handleDefiniteItem():server.Route = {
+    logger.debug("path addDefiniteItem")
+    cookie("userName") { cookieName =>
+      if (cookieSet.contains(cookieName.value))
+        entity(as[ItemToReceive]) { json =>
+          logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
+          val purchaseDao = new PurchaseDao
+          purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
+          complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
+        }
+      else
+        complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/wrongcookie"))
+    }
+  }
+
+  private val getHandler = new GetHandler(cookieSet)
   val route =
     cors() {
-      get {
-        logger.debug("get method")
-        pathSingleSlash {
-          //setCookie(HttpCookie("userName", value = "paul")) {
-            logger.debug("single slash")
-            getFromFile("src/main/resources/html/LoginPage.html")
-          //}
-        } ~
-          path("cookie") {
-            cookie("userName") { cookieName =>
-              complete(s"The logged in user is '${cookieName.value}'")
-            }
-          } ~
-          path("additem") {
-            cookie("userName") { cookieName =>
-              if (cookieSet.contains(cookieName.value))
-                getFromFile("src/main/resources/html/AddItem.html")
-              else {
-                logger.debug(s"wrongcookie = ${cookieName.value}")
-                complete(s"src/main/resources/html/WrongCookie.html")
-              }
-            }
-          } ~
-          path("wrongcookie") {
-            cookie("userName") { cookie =>
-              logger.debug(s"wrongcookie = ${cookie.value}")
-              getFromFile("src/main/resources/html/WrongCookie.html")
-            }
-          } ~
-          path("addorselect") {
-            getFromFile("src/main/resources/html/AddOrSelect.html")
-          } ~
-          path("selectItem") {
-            getFromFile("src/main/resources/html/SelectItem.html")
-          } ~
-          path("loginError") {
-            getFromFile("src/main/resources/html/LoginError.html")
-          } ~
-          path("loginPage") {
-            getFromFile("src/main/resources/html/LoginPage.html")
-          }
-      } ~
+      getHandler.route ~
         post {
           logger.debug("post method")
           path("login") {
@@ -91,18 +68,7 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
             }
           } ~
             path("addDefiniteItem") {
-              logger.debug("path addDefiniteItem")
-              cookie("userName") { cookieName =>
-                if (cookieSet.contains(cookieName.value))
-                  entity(as[ItemToReceive]) { json =>
-                    logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
-                    val purchaseDao = new PurchaseDao
-                    purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
-                    complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
-                  }
-                else
-                  complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/wrongcookie"))
-              }
+              handleDefiniteItem()
             }  ~
             path("selectDefiniteItem"){
               logger.debug("path selectDefiniteItem")
