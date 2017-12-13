@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 import spray.json.DefaultJsonProtocol
 
 
-class AddItemHandler(val cookieSet: CookiesSet) extends Directives with ItemJsonSupport with ItemForSelectJsonSupport with SprayJsonSupport with DefaultJsonProtocol{
+class AddItemHandler(val cookieSet: CookiesSet) extends Directives with ItemJsonSupport  with ItemForSelectJsonSupport with SprayJsonSupport with DefaultJsonProtocol{
   private val logger = LoggerFactory.getLogger(classOf[AddItemHandler])
   val route = path("addDefiniteItem") {
     logger.debug("path addDefiniteItem")
