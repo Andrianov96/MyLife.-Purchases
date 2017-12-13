@@ -23,7 +23,7 @@ class LoginHandler(cookieSet: CookiesSet) extends Directives with IdLoginPasswor
       val Dao = new LoginPasswordDao
       val meetingPairs = Dao.findLoginPassword(json.login, json.password)
       if (meetingPairs.length > 1) {
-        logger.debug("more than one user has such login/password")
+        logger.error("more than one user has such login/password")
         complete("")
       }
       else if (meetingPairs.isEmpty) {
