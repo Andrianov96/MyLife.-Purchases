@@ -1,10 +1,9 @@
-import scalikejdbc.{ConnectionPool, DB, DBSession, using}
+package mypackage
+
 import java.sql.Connection
 
-import UsefulThings._
-import scalikejdbc._
-import scalikejdbc.{ConnectionPool, DB, DBSession}
-import scalikejdbc.config.DBs
+import mypackage.UsefulThings._
+import scalikejdbc.{ConnectionPool, DB, DBSession, using, _}
 
 
 object DBsupport {

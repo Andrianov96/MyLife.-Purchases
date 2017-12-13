@@ -1,38 +1,25 @@
-import DBsupport.{LoginPasswordDao, PurchaseDao}
-import UsefulThings._
+package mypackage.handlers
+
+import mypackage.DBsupport._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{ContentTypes, HttpResponse, ResponseEntity}
 import akka.http.scaladsl.model.headers.HttpCookie
 import akka.http.scaladsl.server
-import akka.http.scaladsl.server.{Directives, StandardRoute}
+import akka.http.scaladsl.server.Directives
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
+import mypackage.CookiesSet
 import org.slf4j.LoggerFactory
 import spray.json.DefaultJsonProtocol
 import spray.json._
+import mypackage.UsefulThings._
 
 import scala.util.Random
-
 class RequestHandler extends Directives with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport with ItemJsonSupport with ItemForSelectJsonSupport with SprayJsonSupport with DefaultJsonProtocol{
   private val logger = LoggerFactory.getLogger(classOf[RequestHandler])
-  var cookieSet = CookiesSet(Map())
-
-
-  def handleDefiniteItem():server.Route = {
-    logger.debug("path addDefiniteItem")
-    cookie("userName") { cookieName =>
-      if (cookieSet.contains(cookieName.value))
-        entity(as[ItemToReceive]) { json =>
-          logger.debug(s"received item - ${json.name} ${json.price} ${json.date} ${json.place} ${json.itemType}")
-          val purchaseDao = new PurchaseDao
-          purchaseDao.insert(cookieSet.getId(cookieName.value), json.name, json.price.toDouble, json.date, json.place, json.itemType)
-          complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
-        }
-      else
-        complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/wrongcookie"))
-    }
-  }
+  var cookieSet = new CookiesSet(Map())
 
   private val getHandler = new GetHandler(cookieSet)
+  private val addItemHandler = new AddItemHandler(cookieSet)
   val route =
     cors() {
       getHandler.route ~
@@ -59,7 +46,7 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
                 //deleteCookie("userName") {
                   logger.debug("cookie was deleted")
                   setCookie(HttpCookie("userName", value = rStr)) {
-                    cookieSet = cookieSet.add(rStr, meetingPairs.head.id)
+                    cookieSet.add(rStr, meetingPairs.head.id)
                     logger.debug(s"cookie was setted $rStr -> ${meetingPairs.head.id} ")
                     complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
                   }
@@ -67,9 +54,7 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
               }
             }
           } ~
-            path("addDefiniteItem") {
-              handleDefiniteItem()
-            }  ~
+            addItemHandler.route  ~
             path("selectDefiniteItem"){
               logger.debug("path selectDefiniteItem")
               cookie("userName") { cookieName =>

@@ -1,17 +1,8 @@
-import DBsupport.{LoginPasswordDao, PurchaseDao}
-import UsefulThings._
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.{ContentTypes, HttpResponse, ResponseEntity}
-import akka.http.scaladsl.model.headers.HttpCookie
-import akka.http.scaladsl.server
-import akka.http.scaladsl.server.{Directives, StandardRoute}
-import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
-import org.slf4j.LoggerFactory
-import spray.json.DefaultJsonProtocol
-import spray.json._
+package mypackage.handlers
 
-import scala.concurrent.ExecutionContext
-import scala.util.Random
+import akka.http.scaladsl.server.Directives
+import mypackage.CookiesSet
+import org.slf4j.LoggerFactory
 
 class GetHandler(cookieSet: CookiesSet) extends Directives{
   private val logger = LoggerFactory.getLogger(classOf[GetHandler])

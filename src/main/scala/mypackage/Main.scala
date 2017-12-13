@@ -1,23 +1,14 @@
-import java.sql.{Connection, DriverManager}
+package mypackage
+
+import java.sql.Connection
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
-import java.sql.{Connection, DriverManager}
-
-import akka.http.scaladsl.server.Directives
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.headers.HttpCookie
-import spray.json._
-import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-import scalikejdbc._
-import scalikejdbc.{ConnectionPool, DB, DBSession}
+import handlers.RequestHandler
+import mypackage.UsefulThings._
+import scalikejdbc.ConnectionPool
 import scalikejdbc.config.DBs
-import UsefulThings._
-import com.typesafe.scalalogging._
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 
 object WebServer1 {
