@@ -27,6 +27,8 @@ object UsefulThings {
     implicit val dataFormatLP = jsonFormat2(LoginPassword)
   }
 
+  case class Purchase(id:BigDecimal, user_id:BigDecimal, name: String, price: BigDecimal, date: String, place: String, itemType: String)
+
   val curLocalHost = "localhost"
 
   trait Constraint{
