@@ -14,6 +14,7 @@ import spray.json.DefaultJsonProtocol
 
 class SelectItemHandler(cookieSet: CookiesSet) extends Directives with IdLoginPasswordJsonSupport with LoginPasswordJsonSupport with ItemJsonSupport with ItemForSelectJsonSupport with SprayJsonSupport with DefaultJsonProtocol {
   private val logger = LoggerFactory.getLogger(classOf[SelectItemHandler])
+
   val route = path("selectDefiniteItem"){
     logger.debug("path selectDefiniteItem")
     cookie("userName") { cookieName =>

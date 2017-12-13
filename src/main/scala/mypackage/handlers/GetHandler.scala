@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 
 class GetHandler(cookieSet: CookiesSet) extends Directives{
   private val logger = LoggerFactory.getLogger(classOf[GetHandler])
+
   val route = get {
     logger.debug("get method")
     pathSingleSlash {

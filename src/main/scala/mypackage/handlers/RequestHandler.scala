@@ -21,40 +21,14 @@ class RequestHandler extends Directives with IdLoginPasswordJsonSupport with Log
   private val getHandler = new GetHandler(cookieSet)
   private val addItemHandler = new AddItemHandler(cookieSet)
   private val selectItem = new SelectItemHandler(cookieSet)
+  private val loginHandler = new LoginHandler(cookieSet)
+
   val route =
     cors() {
       getHandler.route ~
         post {
           logger.debug("post method")
-          path("login") {
-            logger.debug("path login")
-            entity(as[LoginPassword]) { json =>
-              logger.debug(s"${json.login}  ${json.password}")
-              //SELECT
-              val Dao = new LoginPasswordDao
-              val meetingPairs = Dao.findLoginPassword(json.login, json.password)
-              if (meetingPairs.length > 1) {
-                logger.debug("more than one user has such login/password")
-                complete("")
-              }
-              else if (meetingPairs.isEmpty) {
-                logger.debug("emptyResult")
-                complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/loginError"))
-              }
-              else {
-                logger.debug("matched user" + meetingPairs.head.toString)
-                val rStr = Random.nextLong().toString
-                //deleteCookie("userName") {
-                  logger.debug("cookie was deleted")
-                  setCookie(HttpCookie("userName", value = rStr)) {
-                    cookieSet.add(rStr, meetingPairs.head.id)
-                    logger.debug(s"cookie was setted $rStr -> ${meetingPairs.head.id} ")
-                    complete(HttpResponse(entity = "http://" + curLocalHost + ":8080/addorselect"))
-                  }
-                //}
-              }
-            }
-          } ~
+          loginHandler.route ~
             addItemHandler.route  ~
             selectItem.route
         }
