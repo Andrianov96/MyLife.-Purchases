@@ -23,15 +23,13 @@ object WebServer1 extends App{
 
     def connectionFromPool: Connection = ConnectionPool.borrow('demo_db)
     var stmt = connectionFromPool.createStatement
-    var sql = "CREATE TABLE IF NOT EXISTS MYTABLE( id INT(10) NOT NULL AUTO_INCREMENT, login VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id))"
-    var sql2 = "CREATE TABLE IF NOT EXISTS PURCHASES(id INT(10) NOT NULL AUTO_INCREMENT, user_id INT(10) NOT NULL, name VARCHAR(255)," +
-                " price DOUBLE(10) NOT NULL, date DATE, place VARCHAR(255), itemtype VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
-    stmt.executeUpdate(sql)
-    stmt.executeUpdate(sql2)
-    stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +
-      s"VALUES ('loginv', 'passwordv')")
-    stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +
-      s"VALUES ('loginv1', 'passwordv1')")
+//    var sql = "CREATE TABLE IF NOT EXISTS MYTABLE( id INT(10) NOT NULL AUTO_INCREMENT, login VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id))"
+//    var sql2 = "CREATE TABLE IF NOT EXISTS PURCHASES(id INT(10) NOT NULL AUTO_INCREMENT, user_id INT(10) NOT NULL, name VARCHAR(255)," +
+//                " price DOUBLE NOT NULL, date DATE, place VARCHAR(255), itemtype VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
+//    stmt.executeUpdate(sql)
+//    stmt.executeUpdate(sql2)
+//    stmt.executeUpdate("INSERT INTO MYTABLE(login, password) VALUES ('loginv', 'passwordv')")
+//    stmt.executeUpdate("INSERT INTO MYTABLE(login, password) VALUES ('loginv1', 'passwordv1')")
     //DB initiation block
 
     val myRequestHandler = new RequestHandler
