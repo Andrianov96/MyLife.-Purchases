@@ -11,8 +11,8 @@ import scalikejdbc.ConnectionPool
 import scalikejdbc.config.DBs
 
 
-object WebServer1 {
-  def main(args: Array[String]) {
+object WebServer1 extends App{
+  //def main(args: Array[String]) {
     //AKKA
     implicit val system = ActorSystem("my-system")
     implicit val materializer = ActorMaterializer()
@@ -23,9 +23,9 @@ object WebServer1 {
 
     def connectionFromPool: Connection = ConnectionPool.borrow('demo_db)
     var stmt = connectionFromPool.createStatement
-    var sql = "CREATE TABLE MYTABLE( id NUMBER NOT NULL AUTO_INCREMENT, login VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id))"
-    var sql2 = "CREATE TABLE PURCHASES(id NUMBER NOT NULL AUTO_INCREMENT, user_id NUMBER NOT NULL, name VARCHAR(255)," +
-                " price NUMBER NOT NULL, date DATE, place VARCHAR(255), itemtype VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
+    var sql = "CREATE TABLE IF NOT EXISTS MYTABLE( id INT(10) NOT NULL AUTO_INCREMENT, login VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id))"
+    var sql2 = "CREATE TABLE IF NOT EXISTS PURCHASES(id INT(10) NOT NULL AUTO_INCREMENT, user_id INT(10) NOT NULL, name VARCHAR(255)," +
+                " price DOUBLE(10) NOT NULL, date DATE, place VARCHAR(255), itemtype VARCHAR(255), PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES MYTABLE(id))"
     stmt.executeUpdate(sql)
     stmt.executeUpdate(sql2)
     stmt.executeUpdate("INSERT INTO MYTABLE(login, password) " +
@@ -42,5 +42,5 @@ object WebServer1 {
       .flatMap(_.unbind()) // trigger unbinding from the port
       .onComplete(_ => system.terminate()) // and shutdown when done
 
-}
+//}
 }

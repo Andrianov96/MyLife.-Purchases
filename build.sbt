@@ -83,3 +83,5 @@ libraryDependencies ++= Seq(
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.3"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
+
+libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.12"
